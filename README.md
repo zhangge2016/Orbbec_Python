@@ -17,6 +17,6 @@
           
           python3 -m pip install scikit-build
           
-          python3 -m pip --upgrade install pip setuptools wheel
+          python3 -m pip install --upgrade pip setuptools wheel
           
           python3 -m pip install openni opencv-python
