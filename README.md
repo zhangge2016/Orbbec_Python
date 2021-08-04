@@ -19,4 +19,12 @@
           
           python3 -m pip install --upgrade pip setuptools wheel
           
-          python3 -m pip install openni opencv-python
+          sudo python3 -m pip install openni opencv-python
+          
+      3)Illegal instruction错误
+      
+      添加export OPENBLAS_CORETYPE=ARMV8至/etc/profile
+      
+      source /etc/profile
+      
+      reboot
