@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import argparse
-import sys
+import platform
 import os
 from openni import openni2
 from openni import _openni2 as c_api
@@ -13,10 +13,15 @@ import numpy as np
 def getOrbbec():
     # 记载 openni
     try:
-        if sys.platform == "win32":
+        platforms = platform.platform()
+        if re.search('Windows', platforms):
             libpath = "lib/Windows"
+        elif re.search('armv7l', platforms):
+            libpath = "lib/ARM32"
+        elif re.search('aarch64', platforms):
+            libpath = "lib/ARM64"
         else:
-            libpath = "lib/Linux"
+            print("ERROR OpenNI2 lib loaded, maybe download x86_64 type\n")
         print("library path is: ", os.path.join(os.path.dirname(__file__), libpath))
         openni2.initialize(os.path.join(os.path.dirname(__file__), libpath))
         print("OpenNI2 initialized \n")
@@ -98,7 +103,6 @@ def getData(args):
             depthPix = np.swapaxes(depthPix, 0, 1)
             depthPix = depthPix.astype(np.uint8)  # This is required to be able to draw it  # This is required to be able to draw it
             '''
-            print(np.shape(depthPix), np.shape(color_flip))
             cv2.imshow('depth', depthPix)
             cv2.imshow('color', color_flip)
         # 时间间隔
