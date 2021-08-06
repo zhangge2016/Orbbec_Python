@@ -49,6 +49,7 @@ def device_info(pid):
         print('Please set OniDeviceInfo and parameters')
     return Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip
 
+
 # save start time, minute
 data_save_start_time = [0, 120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320]
 # save interval time, microseconds
