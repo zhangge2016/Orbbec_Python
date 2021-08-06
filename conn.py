@@ -46,9 +46,9 @@ def parse_args():
     parser.add_argument('--interval', type=int, default=150, help='save interval microseconds')
     parser.add_argument('--mirroring', default=True, help='mirroring [default: False]')
     parser.add_argument('--compression', default=True, help='compress or not, when saving the video [default: True]')
-    parser.add_argument('--outdir', default='/data/test', help='dir of save .npy')
-    parser.add_argument('--getDataType', default=False)
-    parser.add_argument('--visDataType', default=True)
+    parser.add_argument('--outdir', default='D:/test', help='dir of save .npy')
+    parser.add_argument('--getDataType', default=True)
+    parser.add_argument('--visDataType', default=False)
 
     return parser.parse_args()
 
@@ -78,7 +78,13 @@ def get_color_stream(device, width, height, fps, uvc=True):
 
 
 def get_depth_data(depth_stream):
+
+    # 5s未能获取数据，中断程序
+    if openni2.wait_for_any_stream([depth_stream], 5) is None:
+        raise
+
     frame_depth = depth_stream.read_frame()
+    print('###')
     frame_depth_data = frame_depth.get_buffer_as_uint16()
     # 读取帧的深度信息 depth_array 也是可以用在后端处理的 numpy格式的
     depthPix = np.frombuffer(frame_depth_data, dtype=np.uint16)
