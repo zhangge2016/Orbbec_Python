@@ -1,11 +1,11 @@
+# coding:utf-8
 import os
 import sys
 import signal
+import psutil
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
-# coding:utf-8
-import psutil
 
 
 def checkprocess(processname):
@@ -61,7 +61,7 @@ def spaceMonitorJob():
             # 退出
             sys.exit(-3)
         else:
-            os.system('python3 scheduler.py')
+            os.system('nohup python3 scheduler.py &')
 
 
 # 开启磁盘空间检测
