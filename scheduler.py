@@ -86,29 +86,35 @@ def get_depth_data(depth_stream):
     return depthPix
 
 
-def get_color_data(color_stream, width, height, uvc=True):
+def get_color_data(color_stream, width, height, uvc=True, flip=True):
     if uvc == True:
         _, color_array = color_stream.read()
-        colorPix = color_array#cv2.flip(color_array, 1)
+        if flip == True:
+            colorPix = cv2.flip(color_array, 1)
+        else:
+            colorPix = color_array
     else:
         print(width, height)
         frame_color = color_stream.read_frame()
         frame_data = frame_color.get_buffer_as_uint8()
         colorPix = np.frombuffer(frame_data, dtype=np.uint8)
         colorPix.shape = (height, width, 3)
-        colorPix = np.flip(colorPix, 2)
+        if flip == True:
+            colorPix = np.flip(colorPix, 2)
+        else:
+            colorPix = colorPix
 
     return colorPix
 
 def getData(args, uvc):
     device, OniDeviceInfo = getOrbbec()
     print(OniDeviceInfo.usbProductId)
-    width, height, fps = device_info(pid=OniDeviceInfo.usbProductId)
+    Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = device_info(pid=OniDeviceInfo.usbProductId)
 
     # 创建深度流
-    depth_stream = get_depth_stream(device=device, width=width, height=height, fps=fps)
+    depth_stream = get_depth_stream(device=device, width=Dwidth, height=Dheight, fps=Dfps)
     # 创建rgb流
-    color_stream = get_color_stream(device=device, width=width, height=height, fps=fps, uvc=uvc)
+    color_stream = get_color_stream(device=device, width=Cwidth, height=Cheight, fps=Cfps, uvc=uvc, flip=flip)
 
     # 设置 镜像 帧同步
     device.set_image_registration_mode(c_api.OniImageRegistrationMode.ONI_IMAGE_REGISTRATION_DEPTH_TO_COLOR)
@@ -122,7 +128,7 @@ def getData(args, uvc):
             depthPix = get_depth_data(depth_stream=depth_stream)
 
             # 读取 彩色图
-            colorPix = get_color_data(color_stream=color_stream, height=height, width=width, uvc=uvc)
+            colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc)
 
             filename = time_now.strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npy'
             if not os.path.exists(args.outdir):
@@ -171,4 +177,5 @@ if __name__ == '__main__':
                 uvc = False
             else:
                 uvc = True
+            cap.release()
             getData(args=args, uvc=uvc)
