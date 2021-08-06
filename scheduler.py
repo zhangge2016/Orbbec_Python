@@ -9,7 +9,7 @@ from openni import openni2
 from openni import _openni2 as c_api
 import cv2
 import numpy as np
-from setting import device_info
+import setting
 
 
 def getOrbbec():
@@ -45,10 +45,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--mirroring', default=True, help='mirroring [default: False]')
     parser.add_argument('--compression', default=True, help='compress or not, when saving the video [default: True]')
-    parser.add_argument('--outdir', help='dir of save .npy')
-    parser.add_argument('--start_time', help='minute, 2：00 is 120, eg.[120, 600]')
-    parser.add_argument('--interval', type=int, default=150, help='save interval microseconds')
-    parser.add_argument('--time_long', type=int, default=2, help='minute')
+    parser.add_argument('--outdir', default='/data', help='dir of save .npy')
 
     return parser.parse_args()
 
@@ -108,12 +105,12 @@ def get_color_data(color_stream, width, height, uvc=True, flip=True):
 def getData(args, uvc):
     device, OniDeviceInfo = getOrbbec()
     print(OniDeviceInfo.usbProductId)
-    Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = device_info(pid=OniDeviceInfo.usbProductId)
+    Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = setting.device_info(pid=OniDeviceInfo.usbProductId)
 
     # 创建深度流
     depth_stream = get_depth_stream(device=device, width=Dwidth, height=Dheight, fps=Dfps)
     # 创建rgb流
-    color_stream = get_color_stream(device=device, width=Cwidth, height=Cheight, fps=Cfps, uvc=uvc, flip=flip)
+    color_stream = get_color_stream(device=device, width=Cwidth, height=Cheight, fps=Cfps, uvc=uvc)
 
     # 设置 镜像 帧同步
     device.set_image_registration_mode(c_api.OniImageRegistrationMode.ONI_IMAGE_REGISTRATION_DEPTH_TO_COLOR)
@@ -127,7 +124,7 @@ def getData(args, uvc):
             depthPix = get_depth_data(depth_stream=depth_stream)
 
             # 读取 彩色图
-            colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc)
+            colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc, flip=flip)
 
             filename = time_now.strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npy'
             if not os.path.exists(args.outdir):
@@ -144,7 +141,7 @@ def getData(args, uvc):
             except:
                 color_stream.stop()
             break
-        key_value = cv2.waitKey(args.interval)  # 捕获键值
+        key_value = cv2.waitKey(setting.data_save_interval)  # 捕获键值
 
     # 检测设备是否关闭（没什么用）
     try:
@@ -158,8 +155,8 @@ if __name__ == '__main__':
     args = parse_args()
     minute_ok_lists = []
     while True:
-        for i in eval(args.start_time):
-            minute_ok_lists = list(range(i, i + args.time_long))
+        for i in setting.data_save_start_time:
+            minute_ok_lists = list(range(i, i + setting.data_save_continued))
             time_now = datetime.now()
             minutes_ = int(time_now.hour) * 60 + int(time_now.minute)
             if minutes_ > minute_ok_lists[-1]:
