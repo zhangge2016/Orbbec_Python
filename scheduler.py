@@ -75,6 +75,10 @@ def get_color_stream(device, width, height, fps, uvc=True):
 
 
 def get_depth_data(depth_stream):
+    # 5s未能获取数据，中断程序
+    if openni2.wait_for_any_stream([depth_stream], 5) is None:
+        raise
+
     frame_depth = depth_stream.read_frame()
     frame_depth_data = frame_depth.get_buffer_as_uint16()
     # 读取帧的深度信息 depth_array 也是可以用在后端处理的 numpy格式的
@@ -117,6 +121,7 @@ def getData(args, uvc):
     device.set_depth_color_sync_enabled(True)
 
     while True:
+        #print(device.isValid())
         time_now = datetime.now()
         minutes_ = int(time_now.hour) * 60 + int(time_now.minute)
         if minutes_ in minute_ok_lists:
