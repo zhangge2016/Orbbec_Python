@@ -9,7 +9,7 @@ from openni import openni2
 from openni import _openni2 as c_api
 import cv2
 import numpy as np
-from setting import device_info
+import setting
 
 
 def getOrbbec():
@@ -46,7 +46,7 @@ def parse_args():
     parser.add_argument('--interval', type=int, default=150, help='save interval microseconds')
     parser.add_argument('--mirroring', default=True, help='mirroring [default: False]')
     parser.add_argument('--compression', default=True, help='compress or not, when saving the video [default: True]')
-    parser.add_argument('--outdir', help='dir of save .npy')
+    parser.add_argument('--outdir', default='/data/test', help='dir of save .npy')
     parser.add_argument('--getDataType', default=False)
     parser.add_argument('--visDataType', default=True)
 
@@ -108,7 +108,7 @@ def get_color_data(color_stream, width, height, uvc=True, flip=True):
 def getData(args, uvc):
     device, OniDeviceInfo = getOrbbec()
     print(OniDeviceInfo, OniDeviceInfo.usbProductId)
-    Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = device_info(pid=OniDeviceInfo.usbProductId)
+    Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = setting.device_info(pid=OniDeviceInfo.usbProductId)
 
     # 创建深度流
     depth_stream = get_depth_stream(device=device, width=Dwidth, height=Dheight, fps=Dfps)
