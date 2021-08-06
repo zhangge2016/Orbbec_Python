@@ -94,7 +94,6 @@ def get_color_data(color_stream, width, height, uvc=True, flip=True):
         else:
             colorPix = color_array
     else:
-        print(width, height)
         frame_color = color_stream.read_frame()
         frame_data = frame_color.get_buffer_as_uint8()
         colorPix = np.frombuffer(frame_data, dtype=np.uint8)
