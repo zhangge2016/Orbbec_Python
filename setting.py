@@ -1,3 +1,4 @@
+
 def device_info(pid):
     if pid == 1556:
         # Astra Mini
