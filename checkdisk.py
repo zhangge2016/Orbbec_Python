@@ -4,9 +4,7 @@ import sys
 import signal
 import psutil
 
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.interval import IntervalTrigger
-
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 def checkprocess(processname):
     '''
@@ -28,7 +26,6 @@ def spaceMonitorJob():
     当磁盘(切片存储的目录)利用率超过90%,程序退出
     :return:
     '''
-
     try:
         st = psutil.disk_usage('/data')
         used_percent = st.percent
@@ -65,11 +62,9 @@ def spaceMonitorJob():
 
 
 # 开启磁盘空间检测
-sched = BackgroundScheduler()
-
-# 间隔5分钟开启一个检查
-intervalTrigger = IntervalTrigger(minutes=5)
+sched = BlockingScheduler(timezone='Asia/Shanghai')
 
 # 给检查任务设个id,方便任务的取消
-sched.add_job(spaceMonitorJob, trigger=intervalTrigger, id='id_space_monitor')
+sched.add_job(spaceMonitorJob, 'interval', id='id_space_monitor', minutes=1)
 sched.start()
+
