@@ -131,7 +131,7 @@ def getData(args, uvc):
                 os.mkdir(args.outdir)
             arr = np.array([depthPix, colorPix])
             np.save(os.path.join(args.outdir, filename), arr)
-            print("save %s done" % filename)
+            #print("save %s done" % filename)
         else:
             # 关闭窗口 和 相机
             depth_stream.stop()
