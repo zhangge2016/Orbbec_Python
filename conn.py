@@ -84,7 +84,6 @@ def get_depth_data(depth_stream):
         raise
 
     frame_depth = depth_stream.read_frame()
-    print('###')
     frame_depth_data = frame_depth.get_buffer_as_uint16()
     # 读取帧的深度信息 depth_array 也是可以用在后端处理的 numpy格式的
     depthPix = np.frombuffer(frame_depth_data, dtype=np.uint16)
