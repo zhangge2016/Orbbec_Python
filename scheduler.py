@@ -106,7 +106,7 @@ def get_color_data(color_stream, width, height, uvc=True, flip=True):
 
     return colorPix
 
-def getData(args, uvc, dirs):
+def getData(uvc, rootdir):
     device, OniDeviceInfo = getOrbbec()
     print(OniDeviceInfo.usbProductId)
     Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = setting.device_info(pid=OniDeviceInfo.usbProductId)
@@ -182,4 +182,4 @@ if __name__ == '__main__':
             rootdir = os.path.join(args.outdir, dirs)
             if not os.path.exists(rootdir):
                 os.mkdir(rootdir)
-            getData(args=args, uvc=uvc, dirs=rootdir)
+            getData(uvc=uvc, rootdir=rootdir)
