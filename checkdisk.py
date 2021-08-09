@@ -67,4 +67,3 @@ sched = BlockingScheduler(timezone='Asia/Shanghai')
 # 给检查任务设个id,方便任务的取消
 sched.add_job(spaceMonitorJob, 'interval', id='id_space_monitor', minutes=1)
 sched.start()
-
