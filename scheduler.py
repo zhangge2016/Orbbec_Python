@@ -132,10 +132,9 @@ def getData(args, uvc, dirs):
             colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc, flip=flip)
 
             filename = time_now.strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npy'
-            if not os.path.exists(args.outdir):
-                os.mkdir(args.outdir)
+
             arr = np.array([depthPix, colorPix])
-            np.save(os.path.join(args.outdir, dirs, filename), arr)
+            np.save(os.path.join(rootdir, filename), arr)
             #print("save %s done" % filename)
         else:
             # 关闭窗口 和 相机
@@ -179,5 +178,8 @@ if __name__ == '__main__':
             else:
                 uvc = True
             cap.release()
-            dir = time_now.year + '-' + time_now.mouth + '-' + time_now.day + '-' + time_now.hour
-            getData(args=args, uvc=uvc, dirs=dir)
+            dirs = str(time_now.year) + '-' + str(time_now.mouth) + '-' + str(time_now.day) + '-' + str(time_now.hour)
+            rootdir = os.path.join(args.outdir, dirs)
+            if not os.path.exists(rootdir):
+                os.mkdir(rootdir)
+            getData(args=args, uvc=uvc, dirs=rootdir)
