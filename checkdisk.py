@@ -39,7 +39,7 @@ def spaceMonitorJob():
     main_pid = checkprocess("scheduler.py")
     if isinstance(main_pid, int):
         print("进程存在")
-        if used_percent > 0.9:
+        if used_percent > 90:
             print('No enough space.')
             sched.remove_job(job_id='id_space_monitor')
             sched.shutdown(wait=False)
@@ -51,7 +51,7 @@ def spaceMonitorJob():
             pass
     else:
         print("进程不存在")
-        if used_percent > 0.9:
+        if used_percent > 90:
             print('No enough space.')
             sched.remove_job(job_id='id_space_monitor')
             sched.shutdown(wait=False)
