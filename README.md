@@ -48,3 +48,17 @@
           python3 -m pip install openni
           
   3、RK3399 pro 开发板
+  
+    1）Ubuntu 烧录
+  
+    烧录工具下载：AndroidTool_Release_v2.65（下载：https://download.t-firefly.com/product/Board/RK3399Pro/Tool/Windows/AndroidTool/AndroidTool_Release_v2.65.rar）
+    
+    Ubuntu系统固件下载：AIO-RK3399PRO-JD4-Ubuntu_18.04.5_LTS_DESKTOP_PYTHON3.5-RKNN-OPENCV-20210413-1746.img.7z
+    
+    烧录教程：下载的烧录工具包中《Android开发工具手册_v1.2.pdf》文件
+    
+    2）Python3环境配置（自带python3.6、python3.5和python2.7，建议使用3.6版本）
+                    
+          pip3 install opencv-python
+          
+          pip3 install openni
