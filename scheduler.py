@@ -106,7 +106,7 @@ def get_color_data(color_stream, width, height, uvc=True, flip=True):
 
     return colorPix
 
-def getData(args, uvc):
+def getData(args, uvc, dirs):
     device, OniDeviceInfo = getOrbbec()
     print(OniDeviceInfo.usbProductId)
     Dwidth, Dheight, Dfps, Cwidth, Cheight, Cfps, flip = setting.device_info(pid=OniDeviceInfo.usbProductId)
@@ -135,7 +135,7 @@ def getData(args, uvc):
             if not os.path.exists(args.outdir):
                 os.mkdir(args.outdir)
             arr = np.array([depthPix, colorPix])
-            np.save(os.path.join(args.outdir, filename), arr)
+            np.save(os.path.join(args.outdir, dirs, filename), arr)
             #print("save %s done" % filename)
         else:
             # 关闭窗口 和 相机
@@ -179,4 +179,5 @@ if __name__ == '__main__':
             else:
                 uvc = True
             cap.release()
-            getData(args=args, uvc=uvc)
+            dir = time_now.year + '-' + time_now.mouth + '-' + time_now.day + '-' + time_now.hour
+            getData(args=args, uvc=uvc, dirs=dir)
