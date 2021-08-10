@@ -3,6 +3,7 @@ import os
 import sys
 import signal
 import psutil
+import subprocess
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -58,7 +59,11 @@ def spaceMonitorJob():
             # 退出
             sys.exit(-3)
         else:
-            os.system('nohup python3 scheduler.py &')
+            cmd = 'su - root -c "python3 /home/orbbec/Downloads/Orbbec_python-main/scheduler.py"'
+            p = subprocess.Popen(cmd, shell = True, stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+            password = 'orbbec'
+            p.stdin.write(password.encode('utf-8'))
+            #os.system('nohup python3 scheduler.py &')
 
 
 # 开启磁盘空间检测
