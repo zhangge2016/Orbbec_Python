@@ -178,7 +178,7 @@ if __name__ == '__main__':
             else:
                 uvc = True
             cap.release()
-            dirs = str(time_now.year) + '-' + str(time_now.mouth) + '-' + str(time_now.day) + '-' + str(time_now.hour)
+            dirs = str(time_now.year) + '-' + str(time_now.month) + '-' + str(time_now.day) + '-' + str(time_now.hour)
             rootdir = os.path.join(args.outdir, dirs)
             if not os.path.exists(rootdir):
                 os.mkdir(rootdir)
