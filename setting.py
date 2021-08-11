@@ -52,8 +52,8 @@ def device_info(pid):
 
 # save start time, minute
 data_save_start_time = [0, 120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320]
-# save interval time, microseconds
-data_save_interval = 150
+# save interval time, seconds
+data_save_interval = 0.15
 # save continued time for each start time, minute
 data_save_continued = 60
 
