@@ -59,11 +59,13 @@ def spaceMonitorJob():
             # 退出
             sys.exit(-3)
         else:
+            # zora P1开发板用户切换有密码，采用subprocess模块（通过修改系统配置免密也可使用os模块调用）
             cmd = 'su - root -c "python3 /home/orbbec/Downloads/Orbbec_python-main/scheduler.py"'
             p = subprocess.Popen(cmd, shell = True, stdin = subprocess.PIPE, stdout = subprocess.PIPE)
             password = 'orbbec'
             p.stdin.write(password.encode('utf-8'))
-            #os.system('nohup python3 scheduler.py &')
+            # raspberry Pi开发板默认免密，可以直接使用os模块
+            #os.system('nohup python3 /home/pi/Downloads/Orbbec_python-main/scheduler.py &')
 
 
 # 开启磁盘空间检测
