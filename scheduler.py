@@ -145,7 +145,7 @@ def getData(uvc, rootdir):
             except:
                 color_stream.stop()
             break
-        key_value = cv2.waitKey(setting.data_save_interval)  # 捕获键值
+        time.sleep(setting.data_save_interval)  # 捕获键值
 
     # 检测设备是否关闭（没什么用）
     try:
