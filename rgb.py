@@ -10,16 +10,22 @@ class Producer():
         super(Producer, self).__init__()
         # 通过cv2中的类获取视频流操作对象cap
         self.cap = cv2.VideoCapture(0)
+        # 定义编码格式mpge-4
+        fourcc = cv2.VideoWriter_fourcc('M', 'P', '4', '2')
+        #fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        self.cap.set(6, fourcc)
+        self.cap.set(5, 30)  # May not implemented!
+        self.cap.set(3, 640)
+        self.cap.set(4, 480)
+
         # 调用cv2方法获取cap的视频帧（帧：每秒多少张图片）
-        fps = int(self.cap.set(cv2.CAP_PROP_FPS, 30))
+        fps = int(self.cap.get(cv2.CAP_PROP_FPS))
         print(fps)
         # 获取cap视频流的每帧大小
-        size = (int(self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)),
-                int(self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)))
+        size = (int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
         print(size)
-        # 定义编码格式mpge-4
-        #fourcc = cv2.VideoWriter_fourcc('M', 'P', '4', '2')
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
         # 定义视频文件输入对象
         self.outVideo = cv2.VideoWriter('saveDir1.avi', fourcc, fps, size)
 
