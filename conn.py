@@ -48,7 +48,7 @@ def parse_args():
     parser.add_argument('--compression', default=True, help='compress or not, when saving the video [default: True]')
     parser.add_argument('--outdir', default='D:/test', help='dir of save .npy')
     parser.add_argument('--getDataType', default=True)
-    parser.add_argument('--visDataType', default=False)
+    parser.add_argument('--visDataType', default=True)
 
     return parser.parse_args()
 
@@ -77,7 +77,7 @@ def get_color_stream(device, width, height, fps, uvc=True):
     return color_stream
 
 
-def get_depth_data(depth_stream):
+def get_depth_data(depth_stream, height, width):
 
     # 5s未能获取数据，中断程序
     if openni2.wait_for_any_stream([depth_stream], 5) is None:
@@ -87,6 +87,7 @@ def get_depth_data(depth_stream):
     frame_depth_data = frame_depth.get_buffer_as_uint16()
     # 读取帧的深度信息 depth_array 也是可以用在后端处理的 numpy格式的
     depthPix = np.frombuffer(frame_depth_data, dtype=np.uint16)
+    depthPix = np.ndarray((height, width), dtype=np.uint16, buffer=depthPix)
 
     return depthPix
 
@@ -126,23 +127,21 @@ def getData(args, uvc):
 
     while True:
         # 读取帧
-        depthPix = get_depth_data(depth_stream=depth_stream)
+        depthPix = get_depth_data(depth_stream=depth_stream, height=Dheight, width=Dwidth)
 
         # 读取 彩色图
         colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc, flip=flip)
         #print(np.shape(depthPix), np.shape(colorPix))
         if args.getDataType:
-            filename = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npy'
+            filename = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npz'
             if not os.path.exists(args.outdir):
                 os.mkdir(args.outdir)
-            arr = np.array([depthPix, colorPix])
-            np.save(os.path.join(args.outdir, filename), arr)
+            np.savez(os.path.join(args.outdir, filename), depthPix=np.array(depthPix), colorPix=np.array(colorPix))
             #print("save %s done" % filename)
 
         if args.visDataType:
             # 变换格式用于 opencv 显示
 
-            depthPix = np.ndarray((Dheight, Dwidth), dtype=np.uint16, buffer=depthPix)
             depthPix = 1 - 250 / (depthPix)
             depthPix[depthPix > 1] = 1
             depthPix[depthPix < 0] = 0
