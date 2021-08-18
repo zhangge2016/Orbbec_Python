@@ -141,7 +141,6 @@ def getData(args, uvc):
 
         if args.visDataType:
             # 变换格式用于 opencv 显示
-
             depthPix = 1 - 250 / (depthPix)
             depthPix[depthPix > 1] = 1
             depthPix[depthPix < 0] = 0
