@@ -5,8 +5,12 @@
     <title>Flask Show Image</title>
 </head>
 <body>
-    <img style="width:480px" src="data:;base64,{{ depth_stream }}">
-    <img style="width:480px" src="data:;base64,{{ color_stream }}">
+    <br>
+        相机拍摄视角如下：
+    <br>
+    <img style="width:400px" src="data:;base64,{{ depth_stream }}">
+    <img style="width:400px" src="data:;base64,{{ color_stream }}">
+    <img style="width:420px" src="data:;base64,{{ hist_stream }}">
 
 </body>
 </html>
