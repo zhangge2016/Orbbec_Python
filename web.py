@@ -32,10 +32,10 @@ def return_img_stream(img_local_path):
 
 def get_recent_data():
     root = r'/data'
-    if os.listdir(root) != None:
+    if os.listdir(root) != []:
         recent_hour = sorted(os.listdir(root), reverse=True)[0]
         rootdir = os.path.join(root, recent_hour)
-        if os.listdir(rootdir) != None:
+        if os.listdir(rootdir) != []:
             recent_ms = sorted(os.listdir(rootdir), reverse=True)[0]
             img_path = os.path.join(rootdir, recent_ms)
             data = np.load(img_path, allow_pickle=True)
