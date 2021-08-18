@@ -2,6 +2,7 @@
 import os
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 from flask import Flask, render_template, request
 
 # 设置了静态目录为./upload_pics，方便传递参数给html文件之后，显示图片
@@ -31,7 +32,7 @@ def return_img_stream(img_local_path):
     return img_stream
 
 def get_recent_data():
-    root = r'/data'
+    root = r'D:\data'
     if os.listdir(root) != []:
         recent_hour = sorted(os.listdir(root), reverse=True)[0]
         rootdir = os.path.join(root, recent_hour)
@@ -40,6 +41,8 @@ def get_recent_data():
             img_path = os.path.join(rootdir, recent_ms)
             data = np.load(img_path, allow_pickle=True)
             depthPix, colorPix = data['depthPix'], data['colorPix']
+            m = [x for x in depthPix.flatten(order='C') if x !=0]
+
             depthPix = 1 - 250 / (depthPix)
             depthPix[depthPix > 1] = 1
             depthPix[depthPix < 0] = 0
@@ -51,6 +54,13 @@ def get_recent_data():
             cv2.putText(depthPix, text, (10, 30), font, 0.75, (0, 0, 255), 2)
             cv2.imwrite('images/depth.png', depthPix)
             cv2.imwrite('images/color.png', colorPix)
+
+            plt.hist(m, bins=500, color='red', histtype='stepfilled', alpha=0.75)
+            plt.title('Distance distribution')
+            plt.xlabel('distance')
+            plt.ylabel('number')
+            plt.savefig('images/hist.png')
+            plt.show()
             return 1
         else:
             return 0
@@ -63,13 +73,17 @@ def hello_world():
     if code == 1:
         depth_stream = return_img_stream('images/depth.png')
         color_stream = return_img_stream('images/color.png')
+        hist_stream = return_img_stream('images/hist.png')
         return render_template('vis_index.html',
-                               depth_stream=depth_stream, color_stream=color_stream)
+                               depth_stream=depth_stream,
+                               color_stream=color_stream,
+                               hist_stream=hist_stream)
     else:
         init_stream = return_img_stream('images/init.png')
         return render_template('vis_index.html',
-                               depth_stream=init_stream, color_stream=init_stream)
-
+                               depth_stream=init_stream,
+                               color_stream=init_stream,
+                               hist_stream=init_stream)
 
 
 if __name__ == "__main__":
