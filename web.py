@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 from flask import Flask, render_template, request
 
 # 设置了静态目录为./upload_pics，方便传递参数给html文件之后，显示图片
@@ -24,24 +26,36 @@ def return_img_stream(img_local_path):
     img_stream = ''
     with open(img_local_path, 'rb') as img_f:
         img_stream = img_f.read()
+        print(np.shape(img_stream))
+
         img_stream = base64.b64encode(img_stream).decode()
     return img_stream
 
+def get_recent_data():
+    root = r'E:\Download'
+    if os.listdir(root) != None:
+        recent_hour = sorted(os.listdir(root))[0]
+        rootdir = os.path.join(root, recent_hour)
+        if os.listdir(rootdir) != None:
+            recent_ms = sorted(os.listdir(rootdir))[0]
+            img_path = os.path.join(rootdir, recent_ms)
+            data = np.load(img_path, allow_pickle=True)
+            depthPix, colorPix = data['depthPix'], data['colorPix']
+            depthPix = 1 - 250 / (depthPix)
+            depthPix[depthPix > 1] = 1
+            depthPix[depthPix < 0] = 0
+
+            cv2.imwrite('depth.png', depthPix)
+            cv2.imwrite('color.png', colorPix)
 
 @app.route('/api/vis')
 def hello_world():
-    img_path = '/home/hogan/Googlelogo.png'
-    img_stream = return_img_stream(img_path)
-    return render_template('index.html',
-                           img_stream=img_stream)
-'''
-@app.route('/api/upload', methods=['POST'], strict_slashes=False)
-def api_upload():
-    file_dir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])  # 拼接成合法文件夹地址
-    file_name = '123.jpg'
-    f.save(os.path.join(file_dir, file_name))  # 保存文件到upload目录
-    return render_template('upload_ok.html',
-                           fname=file_name)  # 向html文件以变量名fname传递参数，值为file_name对应的'123.jpg'。此处可以传递多个参数，参考附件链接
+    get_recent_data()
+    depth_stream = return_img_stream('depth.png')
+    color_stream = return_img_stream('color.png')
 
-    # 传递多个参数示例 return render_template('upload_ok.html', fname = file_name, var1='aaa', var2='bbb')
-'''
+    return render_template('vis_index.html',
+                           depth_stream=depth_stream, color_stream=color_stream)
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
