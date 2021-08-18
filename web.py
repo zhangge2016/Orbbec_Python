@@ -41,7 +41,7 @@ def get_recent_data():
             img_path = os.path.join(rootdir, recent_ms)
             data = np.load(img_path, allow_pickle=True)
             depthPix, colorPix = data['depthPix'], data['colorPix']
-            m = [x for x in depthPix.flatten(order='C') if x !=0]
+            depthPix_flatten = [x for x in depthPix.flatten(order='C') if x !=0]
 
             depthPix = 1 - 250 / (depthPix)
             depthPix[depthPix > 1] = 1
@@ -55,7 +55,7 @@ def get_recent_data():
             cv2.imwrite('images/depth.png', depthPix)
             cv2.imwrite('images/color.png', colorPix)
 
-            plt.hist(m, bins=500, color='red', histtype='stepfilled', alpha=0.75)
+            plt.hist(depthPix_flatten, bins=200, color='red', histtype='stepfilled', alpha=0.75)
             plt.title('Distance distribution')
             plt.xlabel('distance')
             plt.ylabel('number')
