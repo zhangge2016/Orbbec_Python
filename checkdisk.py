@@ -60,7 +60,7 @@ def spaceMonitorJob():
             sys.exit(-3)
         else:
             # zora P1开发板用户切换有密码，采用subprocess模块（通过修改系统配置免密也可使用os模块调用）
-            cmd = 'su - root -c "python3 /home/orbbec/Downloads/Orbbec_python-main/scheduler.py"'
+            cmd = 'su - root -c "python3 /home/orbbec/Downloads/Orbbec_Python-main/scheduler.py"'
             p = subprocess.Popen(cmd, shell = True, stdin = subprocess.PIPE, stdout = subprocess.PIPE)
             password = 'orbbec'
             p.stdin.write(password.encode('utf-8'))
