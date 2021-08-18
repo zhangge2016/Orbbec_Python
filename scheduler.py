@@ -74,7 +74,7 @@ def get_color_stream(device, width, height, fps, uvc=True):
     return color_stream
 
 
-def get_depth_data(depth_stream):
+def get_depth_data(depth_stream, width, height):
     # 5s未能获取数据，中断程序
     if openni2.wait_for_any_stream([depth_stream], 5) is None:
         raise
@@ -83,6 +83,7 @@ def get_depth_data(depth_stream):
     frame_depth_data = frame_depth.get_buffer_as_uint16()
     # 读取帧的深度信息 depth_array 也是可以用在后端处理的 numpy格式的
     depthPix = np.frombuffer(frame_depth_data, dtype=np.uint16)
+    depthPix = np.ndarray((height, width), dtype=np.uint16, buffer=depthPix)
 
     return depthPix
 
@@ -126,15 +127,14 @@ def getData(uvc, rootdir):
         minutes_ = int(time_now.hour) * 60 + int(time_now.minute)
         if minutes_ in minute_ok_lists:
             # 读取帧
-            depthPix = get_depth_data(depth_stream=depth_stream)
+            depthPix = get_depth_data(depth_stream=depth_stream, height=Dheight, width=Dwidth)
 
             # 读取 彩色图
             colorPix = get_color_data(color_stream=color_stream, height=Cheight, width=Cwidth, uvc=uvc, flip=flip)
 
-            filename = time_now.strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npy'
+            filename = time_now.strftime('%Y-%m-%d-%H-%M-%S-%f') + '.npz'
 
-            arr = np.array([depthPix, colorPix])
-            np.save(os.path.join(rootdir, filename), arr)
+            np.savez(os.path.join(rootdir, filename), depthPix=np.array(depthPix), colorPix=np.array(colorPix))
             #print("save %s done" % filename)
         else:
             # 关闭窗口 和 相机
