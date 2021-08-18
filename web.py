@@ -1,6 +1,6 @@
+# coding:utf-8
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 from flask import Flask, render_template, request
 
 # 设置了静态目录为./upload_pics，方便传递参数给html文件之后，显示图片
