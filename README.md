@@ -1,6 +1,14 @@
 
   Support ARM32/ARM64/Window system
   
+  python安装包：
+  
+    openni
+    opencv-python
+    apscheduler
+    flask
+    matplotlib
+  
   1、Zora P1 开发板
       
     1）Ubuntu 烧录
@@ -23,11 +31,9 @@
           
     3)Illegal instruction错误
       
-      添加export OPENBLAS_CORETYPE=ARMV8至/etc/profile
+      添加export OPENBLAS_CORETYPE=ARMV8至~/.bashrc
       
-      source /etc/profile
-      
-      reboot
+      source ~/.bashrc
   
   2、Raspberry Pi 4开发板
   
