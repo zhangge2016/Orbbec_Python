@@ -3,12 +3,13 @@
   
   python安装包：
   
-    openni
-    opencv-python
-    apscheduler
-    flask
-    matplotlib
-    psutil
+    openni==2.3.0
+    opencv-python==4.5.3.56
+    apscheduler==3.7.0
+    flask==2.0.1
+    matplotlib==2.1.1
+    psutil==5.8.0
+    numpy==1.19.4
   
   1、Zora P1 开发板
       
