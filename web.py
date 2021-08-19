@@ -1,6 +1,7 @@
 # coding:utf-8
 import os
 import cv2
+import base64
 import numpy as np
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request
@@ -24,7 +25,6 @@ def return_img_stream(img_local_path):
     :param img_local_path:文件单张图片的本地绝对路径
     :return: 图片流
     """
-    import base64
     with open(img_local_path, 'rb') as img_f:
         img_stream = img_f.read()
 
