@@ -60,7 +60,7 @@ def get_recent_data():
             plt.xlabel('distance')
             plt.ylabel('number')
             plt.savefig('images/hist.png')
-            plt.show()
+            plt.close()
             return 1
         else:
             return 0
