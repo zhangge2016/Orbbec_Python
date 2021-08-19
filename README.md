@@ -8,6 +8,7 @@
     apscheduler
     flask
     matplotlib
+    psutil
   
   1、Zora P1 开发板
       
