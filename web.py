@@ -3,6 +3,8 @@ import os
 import cv2
 import base64
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request
 
@@ -34,11 +36,13 @@ def return_img_stream(img_local_path):
 def get_recent_data():
     root = r'D:\data'
     if os.listdir(root) != []:
-        recent_hour = sorted(os.listdir(root), reverse=True)[0]
-        rootdir = os.path.join(root, recent_hour)
+        root_dicts = {int(x.replace('-', '')): x for x in os.listdir(root)}
+        root_recent = sorted(root_dicts.keys(), reverse=True)[0]
+        rootdir = os.path.join(root, root_dicts[root_recent])
         if os.listdir(rootdir) != []:
-            recent_ms = sorted(os.listdir(rootdir), reverse=True)[0]
-            img_path = os.path.join(rootdir, recent_ms)
+            recent_dicts = {int(x.replace('-', '')).replace('.npz', ''): x for x in os.listdir(rootdir)}
+            recent_ms = sorted(recent_dicts.keys(), reverse=True)[0]
+            img_path = os.path.join(rootdir, recent_dicts[recent_ms])
             data = np.load(img_path, allow_pickle=True)
             depthPix, colorPix = data['depthPix'], data['colorPix']
             depthPix_flatten = [x for x in depthPix.flatten(order='C') if x !=0]
@@ -49,7 +53,7 @@ def get_recent_data():
             depthPix = depthPix*255
 
             font = cv2.FONT_HERSHEY_SIMPLEX
-            text = recent_ms.replace('.npz', '')
+            text = recent_dicts[recent_ms].replace('.npz', '')
             cv2.putText(colorPix, text, (10, 30), font, 0.75, (0, 0, 255), 2)
             cv2.putText(depthPix, text, (10, 30), font, 0.75, (0, 0, 255), 2)
             cv2.imwrite('images/depth.png', depthPix)
@@ -87,4 +91,4 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", port=8000, debug=False, use_reloader=False)
