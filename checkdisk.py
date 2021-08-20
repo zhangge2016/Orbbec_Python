@@ -65,7 +65,7 @@ def spaceMonitorJob():
             password = 'orbbec'
             p.stdin.write(password.encode('utf-8'))
             # raspberry Pi开发板默认免密，可以直接使用os模块
-            #os.system('nohup python3 /home/pi/Downloads/Orbbec_python-main/scheduler.py &')
+            #os.system('nohup python3 /home/pi/Downloads/Orbbec_Python-main/scheduler.py &')
 
 
 # 开启磁盘空间检测
