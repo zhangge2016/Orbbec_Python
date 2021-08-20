@@ -40,7 +40,7 @@ def get_recent_data():
         root_recent = sorted(root_dicts.keys(), reverse=True)[0]
         rootdir = os.path.join(root, root_dicts[root_recent])
         if os.listdir(rootdir) != []:
-            recent_dicts = {int(x.replace('-', '')).replace('.npz', ''): x for x in os.listdir(rootdir)}
+            recent_dicts = {int(x.replace('-', '').replace('.npz', '')): x for x in os.listdir(rootdir)}
             recent_ms = sorted(recent_dicts.keys(), reverse=True)[0]
             img_path = os.path.join(rootdir, recent_dicts[recent_ms])
             data = np.load(img_path, allow_pickle=True)
