@@ -38,7 +38,8 @@ def spaceMonitorJob():
         sched.remove_job(job_id='id_space_monitor')
         sched.shutdown(wait=False)
         sys.exit(-3)
-    main_pid = checkprocess("scheduler.py")
+    check_pid = '/home/orbbec/Downloads/Orbbec_Python-main/scheduler.py'
+    main_pid = checkprocess(check_pid)
     if isinstance(main_pid, int):
         print("进程存在")
         if used_percent > 90:
