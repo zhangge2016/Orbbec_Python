@@ -4,6 +4,7 @@ import sys
 import signal
 import psutil
 import subprocess
+import datetime
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -60,8 +61,8 @@ def spaceMonitorJob():
             sys.exit(-3)
         else:
             # zora P1开发板用户切换有密码，采用subprocess模块（通过修改系统配置免密也可使用os模块调用）
-            cmd = 'su - root -c "python3 /home/orbbec/Downloads/Orbbec_Python-main/scheduler.py"'
-            p = subprocess.Popen(cmd, shell = True, stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+            cmd = 'su - root -c "nohup python3 /home/orbbec/Downloads/Orbbec_Python-main/scheduler.py &"'
+            p = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
             password = 'orbbec'
             p.stdin.write(password.encode('utf-8'))
             # raspberry Pi开发板默认免密，可以直接使用os模块
@@ -72,6 +73,6 @@ def spaceMonitorJob():
 sched = BlockingScheduler(timezone='Asia/Shanghai')
 
 # 给检查任务设个id,方便任务的取消
-sched.add_job(spaceMonitorJob, 'interval', id='id_space_monitor', minutes=1)
+sched.add_job(spaceMonitorJob, 'interval', id='id_space_monitor', minutes=1, next_run_time=datetime.datetime.now())
 
 sched.start()
