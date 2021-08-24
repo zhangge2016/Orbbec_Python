@@ -1,8 +1,19 @@
-from scipy.signal import find_peaks
+"""
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
-arrays = np.load('frequency_person.npy')
-from scipy.signal import savgol_filter
+from scipy.signal import savgol_filter, find_peaks
+
+
+def parse_args():
+    '''PARAMETERS'''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--time_start', default=True, help='mirroring [default: False]')
+    parser.add_argument('--interval', default=True, help='compress or not, when saving the video [default: True]')
+    parser.add_argument('--axis', default='/data', help='dir of save .npy')
+
+    return parser.parse_args()
+
 
 def ave_area(arrays, left_top=(330,210), right_lower=(350,240)):
     np_array = arrays[left_top[0]:right_lower[0], left_top[1]:right_lower[1]].reshape(1, -1)
@@ -59,3 +70,29 @@ for index in peaks:
     peak_y.append(y_av[index])
 ax2.scatter(peak_x, peak_y, s=area, c=colors, alpha=0.8)
 plt.show()
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+fig, ax = plt.subplots()
+xdata, ydata = [], []
+ln, = plt.plot([], [], 'ro')
+
+def init():
+    ax.set_xlim(0, 2*np.pi)
+    ax.set_ylim(-1, 1)
+    return ln,
+
+def update(frame):
+    xdata.append(frame)
+    ydata.append(np.sin(frame))
+    ln.set_data(xdata, ydata)
+    return ln,
+
+ani = FuncAnimation(fig, update, frames=np.linspace(0, 2*np.pi, 128),
+                    init_func=init, blit=True)
+ani.save('sin_dot.gif', writer='imagemagick', fps=30)
+
+plt.show()
+
